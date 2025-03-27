@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Modern Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #222;
+            color: #fff;
+            margin: 0;
+        }
+
+        .calculator {
+            background: linear-gradient(145deg, #1f1f1f, #333);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            width: 380px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .calculator.light {
+            background: linear-gradient(145deg, #f8f8f8, #e4e4e4);
+            color: #222;
+        }
+
+        input {
+            width: 100%;
+            height: 60px;
+            text-align: right;
+            font-size: 32px;
+            background-color: #333;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        button {
+            padding: 20px;
+            font-size: 22px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            background-color: #444;
+            color: #fff;
+            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button.operator {
+            background-color: #ff9500;
+        }
+
+        button.equals {
+            background-color: #4caf50;
+        }
+
+        button.clear {
+            background-color: #f44336;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+
+        button.operator:hover {
+            background-color: #ff6700;
+        }
+
+        button.equals:hover {
+            background-color: #45a049;
+        }
+
+        button.clear:hover {
+            background-color: #e53935;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #ff9500;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle:hover {
+            background-color: #ff6700;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <input type="text" id="display" disabled>
+        <div class="buttons">
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button onclick="appendToDisplay('7')">7</button>
+            <button onclick="appendToDisplay('8')">8</button>
+            <button onclick="appendToDisplay('9')">9</button>
+            <button class="operator" onclick="appendToDisplay('x')">x</button>
+
+            <button onclick="appendToDisplay('4')">4</button>
+            <button onclick="appendToDisplay('5')">5</button>
+            <button onclick="appendToDisplay('6')">6</button>
+            <button class="operator" onclick="appendToDisplay('-')">-</button>
+
+            <button onclick="appendToDisplay('1')">1</button>
+            <button onclick="appendToDisplay('2')">2</button>
+            <button onclick="appendToDisplay('3')">3</button>
+            <button class="operator" onclick="appendToDisplay('+')">+</button>
+
+            <button onclick="appendToDisplay('0')">0</button>
+            <button onclick="appendToDisplay('.')">.</button>
+            <button class="equals" onclick="calculate()">=</button>
+            <button class="operator" onclick="appendToDisplay('/')">÷</button>
+        </div>
+
+        <button class="theme-toggle" onclick="toggleTheme()">🌙 / 🌞</button>
+    </div>
+
+    <script>
+        // Function to append clicked buttons to the display
+        function appendToDisplay(value) {
+            document.getElementById('display').value += value;
+        }
+
+        // Function to clear the display
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+
+        // Function to calculate the expression
+        function calculate() {
+            let expression = document.getElementById('display').value;
+
+            // Replace 'x' with '*' and '÷' with '/' to handle the operations in JS
+            expression = expression.replace(/x/g, '*').replace(/÷/g, '/');
+
+            try {
+                let result = eval(expression);
+                document.getElementById('display').value = result;
+            } catch (error) {
+                document.getElementById('display').value = 'Error';
+            }
+        }
+
+        // Function to toggle between dark and light theme
+        function toggleTheme() {
+            const calculator = document.querySelector('.calculator');
+            calculator.classList.toggle('light');
+        }
+
+        // Function to listen to keypress events
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            const operators = ['+', '-', '*', '/', 'x', '÷', '=', 'Enter', 'Backspace', '.'];
+            if (key >= 0 && key <= 9) {
+                appendToDisplay(key);
+            } else if (operators.includes(key)) {
+                if (key === 'x') appendToDisplay('x');
+                else if (key === '÷') appendToDisplay('÷');
+                else if (key === 'Enter' || key === '=') calculate();
+                else if (key === 'Backspace') clearDisplay();
+                else appendToDisplay(key);
+            }
+        });
+    </script>
+
+</body>
+</html>
